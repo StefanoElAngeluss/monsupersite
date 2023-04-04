@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if category_articles %}
+
+<ul>
+  <h1>{{ cats }}</h1>
+  {% for article in category_articles %}
+    <li class="mb-2">
+      <div class="d-flex justify-content-between">
+        <div class="mt-1">
+          <a href="{% url 'article_details' article.pk %}">{{ article.titre }}</a> - {{ article.auteur.first_name }}
+          {{ article.auteur.last_name }} - {{ article.auteur.email }}
+          <br />
+          <b class="text-secondary">Publier le :&nbsp;</b> {{ article.published_date|date:"l d F Y" }}
+        </div>
+        <div>
+          {% if user.is_authenticated %}
+            {% if user.id == article.auteur.id %}
+              <a href="{% url 'edit_article' article.pk %}" class="btn btn-sm btn-warning mt-3">
+                Editer cet article
+              </a>
+              &nbsp;-&nbsp;
+              <a href="{% url 'delete_article' article.pk %}" class="btn btn-sm btn-danger mt-3">
+                Supprimer cet article
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      {{ article.contenu|slice:"0:100"|safe }}
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <h1>Désolé! cette page n'éxiste pas</h1>
+{% endif %}
+
+{% endblock %}

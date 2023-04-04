@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Modification profile {% endblock %}
+
+{% block content %}
+
+  <h1>Modification du profile utilisateur</h1>
+
+  {% if user.is_authenticated %}
+    {% if user.id == profile.user.id %}
+      <form method="POST">
+        <div class="row">
+          <div class="col-8">
+              <div class="form-group">
+                {% csrf_token %}
+                {{ form.as_p }}
+              </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Mettre à jour mon profile</button>
+      </form>
+    {% else %}
+      <p>Vous ne pouvez pas modifier ce profile</p>
+    {% endif %}
+
+  {% else %}
+    <p>Vous n'êtes pas connecté</p>
+  {% endif %}
+
+
+{% endblock %}

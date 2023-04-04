@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} Nouvel article {% endblock %}
+
+{% block content %}
+
+  {% if user.is_authenticated %}
+    <h1>Créer un nouvel article</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col">
+            <div class="form-group">
+              {% csrf_token %}
+              {{ form.media }}
+              Titre:<br />
+              {{ form.titre }}<br />
+              Slug:<br />
+              {{ form.slug }}<br />
+            </div>
+        </div>
+          <div class="col-5">
+            <div class="form-group">
+              Tag:
+              {{ form.titre_tag }}
+              {{ form.auteur }}<br />
+              Catégories:
+              {{ form.category }}<br />
+              Image:
+              {{ form.image }}
+            </div>
+          </div>
+      </div>
+      Contenu:<br />
+      <!-- ajoute une class au formulaire -->
+      {{ form.contenu }}<br /><br />
+      Extrait:<br />
+      {{ form.extrait }}<br /><br />
+      <button type="submit" class="btn btn-primary">Créer l'article</button>
+    </form>
+
+    <script>
+      var name = "{{user.id}}";
+      document.getElementById("current_user").value = name;
+    </script>
+
+  {% else %}
+    <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+  {% endif %}
+
+{% endblock %}

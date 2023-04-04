@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} Éditer {{ article.titre }} {% endblock %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    {% if user.id == article.auteur.id %}
+      <h1>Éditer {{ article.titre }}</h1>
+
+      <form method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-8">
+            <div class="form-group">
+              {% csrf_token %}
+              {{ form.media }}
+                Titre:<br />
+              {{ form.titre }}<br />
+                <!-- Slug:<br /> -->
+              <!-- {{ form.slug }}<br /> -->
+                Tag:<br />
+              {{ form.titre_tag }}<br /><br />
+            </div>
+          </div>
+            <div class="col-4">
+              <div class="form-group" style="margin-top: -48px;">
+                <br /><br />
+              <!-- Utilisateur:<br /> -->
+            <!-- {{ form.auteur }}<br /><br /> -->
+                  Catégories:<br />
+                {{ form.category }}<br />
+                  Image:<br />
+                {{ form.image }}
+              </div>
+            </div>
+        </div>
+        Contenu:<br />
+        <!-- ajoute une class au formulaire -->
+        {{ form.contenu|safe }}<br /><br />
+        Extrait:<br />
+        <!-- ajoute une class au formulaire -->
+        {{ form.extrait|safe }}<br /><br />
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <a href="{% url 'accueil' %}" class="btn btn-secondary">Annuler</a>
+      </form>
+    {% else %}
+      <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+    {% endif %}
+
+  {% else %}
+    <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+  {% endif %}
+
+{% endblock %}

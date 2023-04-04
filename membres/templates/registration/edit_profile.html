@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %} Editer votre compte {% endblock %}
+
+{% block content %}
+
+  <h1>Editer votre compte</h1>
+
+  {% if user.bio %}
+  <p>Vous n'avez pas de bio</p>
+  {% else %}
+  {% if user.profile.bio %}<br />
+    <b>Biographie :</b><br />
+    {{ user.profile.bio }}<br /><br />
+    {% endif %}
+    <hr>
+  {% endif %}
+
+  <form method="POST">
+    <div class="row">
+      <div class="col-5">
+          <div class="form-group">
+            {% csrf_token %}
+            {% comment %} {{ form.as_p }} {% endcomment %}
+              Nom d'utilisateur:<br />
+            {{ form.username }}<br />
+              Prénom:<br />
+            {{ form.first_name }}<br />
+              Nom:<br />
+            {{ form.last_name }}<br />
+              Email:<br />
+            {{ form.email }}<br />
+            {% if user.password %}
+              <a href="{% url 'password_change' %}" class="btn btn-sm btn-warning">
+                Changer le mot de passe
+              </a>
+              <br /><br />
+            {% endif %}
+          </div>
+      </div>
+      <div class="col-3"></div>
+        <div class="col-4">
+          <div class="form-group">
+            Avatar:<br />
+            {% if user.profile.profile_avatar %}
+              <img src="{{ user.profile.profile_avatar.url }}" alt="{{ profile_avatar }}" style="width: 30px; height: 30px; border-radius:100%;">
+            {% endif %}
+          </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Mettre à jour mon compte</button>
+  </form>
+
+{% endblock %}

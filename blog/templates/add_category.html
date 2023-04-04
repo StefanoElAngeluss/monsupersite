@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} Nouvelle catégorie {% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <h1>Créer un nouvelle catégorie</h1>
+
+  <form method="POST">
+    <div class="row">
+      <div class="col">
+          <div class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Ajouter la catégorie</button>
+          </div>
+      </div>
+    </div>
+  </form>
+
+{% else %}
+  <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+{% endif %}
+
+{% endblock %}

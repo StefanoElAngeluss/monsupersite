@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ article.titre_tag }} {% endblock %}
+
+{% block content %}
+
+  <h1>{{ article.titre }}</h1>
+
+  <div class="d-flex justify-content-between">
+    <div class="mt-2">
+      <b>Créer par</b>
+      {% if article.auteur.profile %}
+          {{ article.auteur.first_name }}
+          {{ article.auteur.last_name }}<br />
+        <a href="{% url 'profile_utilisateur' article.auteur.profile.id %}">
+          <div class="badge bg-success">Voir le profile</div>
+        </a>
+      {% else %}
+        {{ article.auteur.first_name }}
+        {{ article.auteur.last_name }}<br />
+        <div class="badge bg-danger">Pas de profile</div>
+      {% endif %}
+    </div>
+    <div class="mt-2">
+      <b class="text-muted">Catégorie</b><br />
+      <span class="badge rounded-pill" style="
+      background: rgb(2,0,36);
+      background:
+        linear-gradient(180deg,
+        rgba(2,0,36,1) 0%,
+        rgba(9,9,121,1) 81%,
+        rgba(0,212,255,1) 100%);
+      ">
+        {{ article.category }}
+      </span>
+    </div>
+    {% if user.is_authenticated %}
+      {% if user.id == article.auteur.id %}
+        <div class="mt-4">
+          <a href="{% url 'edit_article' article.pk %}" class="btn btn-sm btn-warning mx-2">Editer cet article</a>
+          <a href="{% url 'delete_article' article.pk %}" class="btn btn-sm btn-danger">Supprimer cet article</a>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+  <hr />
+  {{ article.contenu|safe }}
+  <br /><br />
+
+  {% if article.image %}
+    <img src="{{ article.image.url }}" alt="{{ article.titre }}" style="width: 100%; height: 650px;">
+  {% endif %}
+
+  <br />
+  <br />
+    <b>Publier le :&nbsp;</b> {{ article.published_date|date:"l d F Y" }}
+    &nbsp;
+    <b>à :&nbsp;</b> {{ article.published_date|date:"H:i" }}
+  <br />
+  <br />
+  <a href="{% url 'accueil' %}" class="btn btn-secondary">Retour a l'accueil</a>
+
+  <br /><br />
+  <hr />
+  <br />
+
+  <form action="{% url 'like_article' article.pk %}" method="POST">
+    {% csrf_token %}
+
+    {% if user.is_authenticated %}
+      {% if liked %}
+        <button type="submit" name="article_id" value="{{ article.id }}" class="btn btn-sm btn-danger">J'aime pas</button>
+      {% else %}
+        <button type="submit" name="article_id" value="{{ article.id }}" class="btn btn-sm btn-primary">J'aime</button>
+      {% endif %}
+    {% else %}
+      <small>
+        <a href="{% url 'login' %}" style="text-decoration:none;">
+          Se connecter
+        </a> pour liker cet article
+      </small>
+    {% endif %}
+      - {{ total_likes }} likes
+  </form>
+
+  <br />
+
+  <div class="card">
+    <div class="row">
+
+      <div class="col-3">
+        {% if user.profile.profile_avatar %}
+          <img src="{{ user.profile.profile_avatar.url }}", class="img-fluid rounded-3" style="width:100%; height:100%;">
+          {% comment %} <img src="{{ objet.image.url }}" class="card-img" alt="{{ objet.titre }}"> {% endcomment %}
+        {% else %}
+          <img src="{% static 'blog/images/avatar.jpg' %}" style="width:200px; height:250px;" class="img-fluid rounded-3" alt="image utilisateur">
+          {% comment %} <img src="../../membres/default/avatar.jpg", style="width:200px; height:250px;" class="card-img rounded-3" alt="image utilisateur"> {% endcomment %}
+        {% endif %}
+      </div>
+
+      <div class="col-9">
+        <div class="card-body">
+          <h4 class="card-title mx-3">
+            <p>
+              <span>
+                Profile de
+              </span>
+              <span class="text-success">
+                {{ user.first_name }}
+                {{ user.last_name }}
+              </span>
+            </p>
+
+            <a class="btn btn-sm btn-primary" href="{% url 'profile_utilisateur' user.profile.id %}">Page de profile</a>
+          </h4>
+          {% comment %} <div class="text-muted text-center">
+            {% if user.profile.facebook_url %}
+              <a href="{{ user.profile.facebook_url }}" target="_blank" rel="noopener" style="text-decoration:none;">
+                <i class="fa-brands fa-facebook fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.github_url %}
+              <a href="{{ user.profile.github_url }}" target="_blank" rel="noopener" style="color:black; text-decoration:none;">
+                <i class="fa-brands fa-github-alt fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.twitter_url %}
+              <a href="{{ user.profile.twitter_url }}" target="_blank" rel="noopener" style="color:darkorkid; text-decoration:none;">
+                <i class="fa-brands fa-twitter fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.instagram_url %}
+              <a href="{{ user.profile.instagram_url }}" target="_blank" rel="noopener" style="color:tomato; text-decoration:none;">
+                <i class="fa-brands fa-instagram fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.linkedin_url %}
+              <a href="{{ user.profile.linkedin_url }}" target="_blank" rel="noopener" style="color:navy; text-decoration:none;">
+                <i class="fa-brands fa-linkedin fa-2xl"></i>
+              </a>
+            {% endif %}
+            {% if user.profile.pinterest_url %}
+              <a href="{{ user.profile.pinterest_url }}" target="_blank" rel="noopener" style="color:forestgreen; text-decoration:none;">
+                <i class="fa-brands fa-pinterest fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.website_url %}
+              <a href="{{ user.profile.website_url }}" target="_blank" rel="noopener" style="color:sienna; text-decoration:none;">
+                <i class="fa fa-globe fa-2xl"></i>
+              </a>
+            {% endif %}
+            &nbsp;&nbsp;
+            {% if user.profile.youtube_url %}
+              <a href="{{ user.profile.youtube_url }}" target="_blank" rel="noopener" style="color:darkred; text-decoration:none;">
+                <i class="fa-brands fa-youtube fa-2xl"></i>
+              </a>
+            {% endif %}
+          </div> {% endcomment %}
+          <div class="mx-3" style="margin: 30px 0 -50px 0;">
+            {{ user.profile.bio|safe|truncatewords:10|linebreaks }}
+          </div>
+          <small class="text-muted d-flex justify-content-end me-4">
+            <span style="margin-top: 60px;">
+              Inscrit le {{ user.date_joined }}
+            </span>
+          </small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <br />
+  <hr>
+  <br />
+
+  <h2>
+    Commentaires
+  </h2>
+  <br />
+  <h4>
+    <span style="font-size:20px;">Il y as <span style="font-size:18px;color:darkred" class="badge bg-info rounded-pill">{{ article.commentaires.count }}</span> commentaire{{ article.commentaires.count|pluralize }}</span>
+    <i class="fa fa-comment-dots" style="color: darkblue;"></i>
+  </h4>
+
+  {% if not article.commentaires.all %}
+    <p>Il n'y a pas encore de commentaires</p>
+  {% else %}
+    <a href="{% url 'create_commentaire' article.pk %}">Ajouter un commentaire</a>
+    <br /><br />
+    {% for commentaire in article.commentaires.all %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <strong>
+            {{ commentaire.nom }}
+            <small class="text-muted">
+              {{ commentaire.commentaire_date|date:"l d F Y" }}
+            </small>
+          </strong>
+          <p class="card-text">{{ commentaire.contenu }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <a href="{% url 'create_commentaire' article.pk %}">Ajouter un commentaire</a>
+
+  <br /><br />
+
+
+
+{% endblock %}

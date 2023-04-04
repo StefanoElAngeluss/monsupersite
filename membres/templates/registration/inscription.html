@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %} Inscription {% endblock %}
+
+{% block content %}
+
+  <form method="POST">
+    <div class="row">
+
+      <div class="col-3"></div>
+      <div class="col-6">
+        <h1>Inscription</h1>
+        <div class="form-group">
+          {% csrf_token %}
+          {% comment %} {{ form.as_p }} {% endcomment %}
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="username" placeholder="nom d'utilisateur">
+            <label>Nom d'utilisateur</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" name="email" placeholder="email">
+            <label>Email</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="first_name" placeholder="prénom">
+            <label>Prénom</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="last_name" placeholder="Nom">
+            <label>Nom</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" name="password1" placeholder="Mot de passe">
+            <label>Mot de passe</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" name="password2" placeholder="Confirmation du mot de passe">
+            <label>Confirmation du mot de passe</label>
+          </div>
+
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+        <br /><br />
+        Vous avez un compte ? <a href="{% url 'connexion' %}">Se connecter</a>
+      </div>
+      <div class="col-3"></div>
+      {% comment %} <div class="col-6"> {% endcomment %}
+          {% comment %} <div class="form-group"> {% endcomment %}
+
+              <!-- Prénom:<br />
+            {{ form.first_name }}<br />
+              Nom:<br />
+            {{ form.last_name }}<br />
+              Nom d'utilisateur:<br />
+            {{ form.username }}<br />
+              Email:<br />
+            {{ form.email }}<br /><br />
+              Mot de passe:<br />
+            {{ form.password }}<br /><br />
+              Confirmez votre mot de passe:<br />
+            {{ form.password_confirmation }}<br /><br /> -->
+          {% comment %} </div> {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+        {% comment %} <div class="col-6"> {% endcomment %}
+          <!-- <div class="form-group">
+              Avatar:<br />
+            {{ form.avatar }}
+          </div> -->
+        {% comment %} </div> {% endcomment %}
+    </div>
+    {% comment %} <button type="submit" class="btn btn-primary">S'inscrire</button> {% endcomment %}
+  </form>
+
+{% endblock %}

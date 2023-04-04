@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <ul>
+    <h1>Articles</h1>
+    {% for article in object_list %}
+      <li class="mb-2">
+        <div class="d-flex justify-content-between">
+          <div class="mt-1">
+            <a href="{% url 'article_details' article.pk %}">{{ article.titre }}</a> - {{ article.auteur.first_name }}
+            {{ article.auteur.last_name }} - {{ article.auteur.email }}
+            <br />
+            <b class="text-secondary">Publier le :&nbsp;</b> {{ article.published_date|date:"l d F Y" }}
+            <div>
+              <b class="text-secondary">Catégorie :</b>
+              <span class="badge rounded-pill bg-primary">
+                <a href="{% url 'category' article.category|slugify %}"
+                    style="color: white; text-decoration:none;">
+                  {{ article.category }}
+                </a>
+              </span>
+            </div>
+          </div>
+          <div class="mt-2">
+            {% if user.is_authenticated %}
+              {% if user.id == article.auteur.id %}
+                <a href="{% url 'edit_article' article.pk %}" class="btn btn-sm btn-warning mt-3">
+                  Editer cet article
+                </a>
+                &nbsp;-&nbsp;
+                <a href="{% url 'delete_article' article.pk %}" class="btn btn-sm btn-danger mt-3">
+                  Supprimer cet article
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {{ article.extrait }}
+        {% comment %} {{ article.contenu|slice:"0:100"|safe }} {% endcomment %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

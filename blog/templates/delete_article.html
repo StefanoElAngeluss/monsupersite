@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+{% block title %} Supprimer {{ article.titre }} {% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  {% if user.id == article.auteur.id %}
+    <h1>Supprimer l'article</h1>
+    <br />
+    <form method="POST">
+      <div class="row">
+        <div class="col">
+          <h3>Titre: {{ article.titre }}</h3>
+          <div class="form-group">
+            {% csrf_token %}
+          </div>
+        </div>
+    </div><br />
+      <strong>Êtes vous sur de vouloir supprimer cette article ?</strong>
+      <button class="btn btn-danger">Supprimer l'article!</button>
+    </form>
+  {% else %}
+    <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+  {% endif %}
+
+{% else %}
+  <h1 style="color:red;">Vous n'êtes pas autorisé à afficher cette page!</h1>
+{% endif %}
+
+{% endblock %}
